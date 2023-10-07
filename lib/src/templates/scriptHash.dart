@@ -26,7 +26,7 @@ bool inputCheck(List<dynamic> chunks, bool allowIncomplete) {
     return p2wpkh.outputCheck(bscript.compile(redeemScriptChunks));
   }
 
-  if (p2pkh.inputCheck(scriptSigChunks) &&
+  if (p2pkh.inputCheck(scriptSigChunks!) &&
       p2pkh.outputCheck(bscript.compile(redeemScriptChunks))) {
     return true;
   }

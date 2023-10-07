@@ -10,7 +10,7 @@ import 'dart:convert';
 import 'package:hex/hex.dart';
 import 'dart:typed_data';
 
-dynamic getPayment({String type, dynamic data, dynamic network}) {
+dynamic getPayment({String? type, dynamic data, dynamic network}) {
   switch (type) {
     case 'p2pkh':
       return P2PKH(data: data, network: network);
@@ -83,7 +83,7 @@ void main() {
               dependency = [dependency];
             }
 
-            PaymentData args;
+            PaymentData? args;
             dependency.forEach((d) {
               args = _from(d, detail, args);
             });
@@ -128,7 +128,7 @@ PaymentData _preformPaymentData(dynamic x) {
   final pubkey = x['pubkey'] != null ? HEX.decode(x['pubkey']) : null;
   final signature = x['signature'] != null ? HEX.decode(x['signature']) : null;
 
-  PaymentData redeem;
+  PaymentData? redeem;
 
   if (x['redeem'] != null) {
     redeem = PaymentData();
@@ -147,11 +147,11 @@ PaymentData _preformPaymentData(dynamic x) {
   }
   return PaymentData(
       address: address,
-      hash: hash,
+      hash: Uint8List.fromList(hash!),
       input: input,
-      output: output,
-      pubkey: pubkey,
-      signature: signature,
+      output: Uint8List.fromList(output!),
+      pubkey: Uint8List.fromList(pubkey!),
+      signature: Uint8List.fromList(signature!),
       witness: witness,
       redeem: redeem);
 }
@@ -166,7 +166,7 @@ networks.NetworkType _preformNetwork(dynamic x) {
   return networks.bitcoin;
 }
 
-PaymentData _from(String path, PaymentData paymentData, [PaymentData result]) {
+PaymentData _from(String path, PaymentData paymentData, [PaymentData? result]) {
   final paths = path.split('.');
 
   result = result ?? PaymentData();
@@ -201,11 +201,11 @@ void _equateBase(PaymentData paymentData, dynamic expected) {
 }
 
 void _equate(PaymentData paymentData, dynamic expected,
-    [PaymentData arguments]) {
+    [PaymentData? arguments]) {
   _equateBase(paymentData, expected);
 
   if (expected['redeem'] != null) {
-    _equateBase(paymentData.redeem, expected['redeem']);
+    _equateBase(paymentData.redeem!, expected['redeem']);
   }
 
   if (expected['name'] != null) {

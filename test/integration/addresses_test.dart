@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:bitcoindart/src/models/networks.dart' as networks;
 import 'package:bitcoindart/src/ecpair.dart' show ECPair;
 import 'package:bitcoindart/src/payments/index.dart' show PaymentData;
@@ -29,7 +31,7 @@ void main() {
     });
     test('can generate an address from a SHA256 hash', () {
       final hash =
-          SHA256Digest().process(utf8.encode('correct horse battery staple'));
+          SHA256Digest().process(Uint8List.fromList(utf8.encode('correct horse battery staple')));
       final keyPair = ECPair.fromPrivateKey(hash);
       final address =
           P2PKH(data: PaymentData(pubkey: keyPair.publicKey)).data.address;
