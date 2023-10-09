@@ -1,13 +1,13 @@
 import 'dart:typed_data';
-import 'package:meta/meta.dart';
-import 'package:bip32/src/utils/ecurve.dart' show isPoint;
+
 import 'package:bech32/bech32.dart';
+import 'package:bip32/src/utils/ecurve.dart' show isPoint;
 
 import '../crypto.dart';
 import '../models/networks.dart';
 import '../payments/index.dart' show PaymentData;
-import '../utils/script.dart' as bscript;
 import '../utils/constants/op.dart';
+import '../utils/script.dart' as bscript;
 
 class P2WPKH {
   final EMPTY_SCRIPT = Uint8List.fromList([]);
@@ -27,7 +27,6 @@ class P2WPKH {
         data.witness == null) throw ArgumentError('Not enough data');
 
     data.name = 'p2wpkh';
-
     if (data.address != null) {
       _getDataFromAddress(data.address!);
     }

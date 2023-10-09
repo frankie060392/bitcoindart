@@ -108,7 +108,7 @@ class TransactionBuilder {
       throw new ArgumentError('txHash invalid');
     }
     return _addInputUnsafe(
-        hash, vout, new Input(sequence: sequence!, prevOutScript: prevOutScript!, value: value));
+        hash, vout, new Input(sequence: sequence, prevOutScript: prevOutScript, value: value));
   }
 
   sign({
@@ -144,7 +144,7 @@ class TransactionBuilder {
         if (type == SCRIPT_TYPES['P2WPKH']) {
           input.prevOutType = SCRIPT_TYPES['P2WPKH']!;
           input.hasWitness = true;
-          input.signatures = [];
+          input.signatures = [null];
           input.pubkeys = [ourPubKey];
           input.signScript =
               P2PKH(data: PaymentData(pubkey: ourPubKey), network: this.network).data.output!;
@@ -152,14 +152,14 @@ class TransactionBuilder {
           // DRY CODE
           Uint8List prevOutScript = pubkeyToOutputScript(ourPubKey);
           input.prevOutType = SCRIPT_TYPES['P2PKH']!;
-          input.signatures = [];
+          input.signatures = [null];
           input.pubkeys = [ourPubKey];
           input.signScript = prevOutScript;
         }
       } else {
         Uint8List prevOutScript = pubkeyToOutputScript(ourPubKey);
         input.prevOutType = SCRIPT_TYPES['P2PKH']!;
-        input.signatures = [];
+        input.signatures = [null];
         input.pubkeys = [ourPubKey];
         input.signScript = prevOutScript;
       }
@@ -213,7 +213,7 @@ class TransactionBuilder {
             network: network,
           );
           tx.setInputScript(i, payment.data.input!);
-          tx.setWitness(i, payment.data.witness!);
+          tx.setWitness(i, payment.data.witness);
         } else if (_inputs[i].prevOutType == SCRIPT_TYPES['P2WPKH']) {
           P2WPKH payment = new P2WPKH(
             data: new PaymentData(
